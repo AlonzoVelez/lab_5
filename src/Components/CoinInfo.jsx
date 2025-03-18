@@ -1,37 +1,37 @@
 import { useEffect, useState } from "react";
 const API_KEY = import.meta.env.VITE_APP_API_KEY;
 
-const CoinInfo = ({ image, name, symbol }) => {
+const CoinInfo = ({ id, name, symbol }) => {
   const [price, setPrice] = useState(null);
   useEffect(() => {
     const getCoinPrice = async () => {
       const response = await fetch(
-        `https://min-api.cryptocompare.com/data/price?fsym=${symbol}&tsyms=USD&api_key=` +
-          API_KEY
+        `https://api.coingecko.com/api/v3/coins/${id}?x_cg_demo_api_key=${API_KEY}`
       );
-
       const json = await response.json();
-      if (json.USD) {
-        setPrice(json);
-      }
+      setPrice(json);
+
+      console.log(json);
+      console.log(json.market_data);
     };
     getCoinPrice().catch(console.error);
   }, []);
-  console.log(name, price);
-  if (price) {
-    console.log("NAME: PRICE", name, price);
-  }
 
   return (
     <div>
       <li className="main-list" key={symbol}>
         <img
           className="icons"
-          src={`https://www.cryptocompare.com${image}`}
+          src={price ? price.image.thumb : null}
           alt={`Small icon for ${name} crypto coin`}
         />
         {name} <span className="tab"></span>
-        {price ? `$${price.USD} USD` : "Price Unavailable"}
+        {price &&
+        price.market_data &&
+        price.market_data.current_price &&
+        price.market_data.current_price.usd
+          ? `$${price.market_data.current_price.usd} USD`
+          : "Price Unavailable"}
       </li>
     </div>
   );
