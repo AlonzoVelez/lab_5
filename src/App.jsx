@@ -28,7 +28,6 @@ function App() {
           .toLowerCase()
           .includes(searchValue.toLowerCase())
       );
-      console.log(filteredData);
       setFilteredResults(filteredData.slice(0, 30));
     } else {
       setFilteredResults(Object.keys(list.Data).slice(0, 30));
